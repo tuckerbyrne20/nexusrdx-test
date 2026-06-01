@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus RDX — AI for Real Estate Development</title>
+<style>
+  :root{
+    --bg:#ffffff; --ink:#0b1220; --muted:#5b6573; --line:#e6e9ef;
+    --navy:#070d1c; --blue:#2f6bff; --blue2:#1d4fd6; --soft:#f5f7fb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+  a{color:inherit;text-decoration:none}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:var(--navy);border-bottom:3px solid var(--blue)}
+  .bar{max-width:1080px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:28px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .brand .wm{display:flex;align-items:baseline;gap:10px}
+  .brand .wm .sep{width:3px;height:30px;background:var(--blue);border-radius:2px}
+  .brand .wm .nx{color:#fff;font-weight:800;font-size:24px;letter-spacing:.02em}
+  .brand .wm .rdx{color:var(--blue);font-weight:600;font-size:18px;letter-spacing:.35em}
+  nav{margin-left:auto;display:flex;gap:6px}
+  nav button{background:none;border:none;color:#c6cdda;font-size:15px;font-weight:600;padding:9px 16px;border-radius:8px;cursor:pointer;transition:.15s}
+  nav button:hover{color:#fff;background:rgba(255,255,255,.06)}
+  nav button.active{color:#fff;background:var(--blue)}
+
+  main{max-width:1080px;margin:0 auto;padding:0 24px}
+  section.tab{display:none;padding:72px 0}
+  section.tab.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* Hero */
+  .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+  .eyebrow{color:var(--blue);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+  h1{font-size:46px;line-height:1.08;font-weight:820;letter-spacing:-.02em;margin-bottom:20px}
+  h1 .accent{color:var(--blue)}
+  .lead{font-size:18px;color:var(--muted);max-width:520px;margin-bottom:28px}
+  .cta{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;font-weight:680;font-size:16px;padding:14px 26px;border-radius:10px;transition:.15s;border:none;cursor:pointer}
+  .cta:hover{background:var(--blue2)}
+  .cta.ghost{background:transparent;color:var(--blue);border:1.5px solid var(--blue);margin-left:10px}
+  .cta.ghost:hover{background:var(--soft)}
+  .hero-art{display:flex;justify-content:center}
+
+  .stats{display:flex;gap:14px;margin-top:64px;flex-wrap:wrap}
+  .stat{flex:1;min-width:200px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:24px}
+  .stat .k{font-size:30px;font-weight:800;color:var(--ink)}
+  .stat .l{color:var(--muted);font-size:14px;margin-top:4px}
+
+  h2{font-size:30px;font-weight:780;letter-spacing:-.01em;margin-bottom:18px}
+  .sub{color:var(--muted);font-size:17px;max-width:680px;margin-bottom:36px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px}
+  .feat .ic{width:42px;height:42px;border-radius:10px;background:var(--soft);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .feat h3{font-size:17px;margin-bottom:8px}
+  .feat p{color:var(--muted);font-size:14.5px}
+
+  /* Downloads */
+  .dl-card{display:flex;gap:24px;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:18px;padding:30px;max-width:760px}
+  .dl-icon{flex:none;width:84px;height:84px;border-radius:16px;background:var(--navy);display:flex;align-items:center;justify-content:center}
+  .dl-body{flex:1}
+  .dl-body h3{font-size:20px;margin-bottom:6px}
+  .dl-body p{color:var(--muted);font-size:15px;margin-bottom:6px}
+  .dl-tag{display:inline-block;font-size:12px;font-weight:600;color:var(--blue);background:#eaf0ff;border-radius:999px;padding:4px 10px;margin-bottom:14px}
+  .dl-btn{display:inline-flex;align-items:center;gap:9px;background:var(--blue);color:#fff;font-weight:680;font-size:15px;padding:12px 22px;border-radius:10px;transition:.15s}
+  .dl-btn:hover{background:var(--blue2)}
+  .install{margin-top:34px;max-width:760px}
+  .install h4{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:16px}
+  .step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+  .step .n{flex:none;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .step .t{font-size:15px;color:var(--ink)}
+  .step .t span{color:var(--muted)}
+
+  footer{border-top:1px solid var(--line);margin-top:40px}
+  .foot{max-width:1080px;margin:0 auto;padding:28px 24px;display:flex;align-items:center;gap:14px;color:var(--muted);font-size:13px}
+  .foot .dot{margin:0 4px}
+
+  @media(max-width:820px){
+    .hero{grid-template-columns:1fr;gap:28px}
+    .hero-art{order:-1}
+    h1{font-size:36px}
+    .grid3{grid-template-columns:1fr}
+    nav{gap:0}
+    nav button{padding:8px 10px;font-size:14px}
+    .brand .wm .nx{font-size:20px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">
+      <!-- logo -->
+      <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Nexus RDX logo">
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#5b8bff"/><stop offset="1" stop-color="#2f6bff"/>
+        </linearGradient></defs>
+        <!-- outer hexagon (pointy-top) -->
+        <polygon points="50,8 86.4,29 86.4,71 50,92 13.6,71 13.6,29" stroke="url(#g)" stroke-width="3" fill="rgba(47,107,255,0.07)"/>
+        <!-- spokes to center -->
+        <g stroke="url(#g)" stroke-width="2" opacity="0.55">
+          <line x1="50" y1="8" x2="50" y2="50"/><line x1="86.4" y1="29" x2="50" y2="50"/>
+          <line x1="86.4" y1="71" x2="50" y2="50"/><line x1="50" y1="92" x2="50" y2="50"/>
+          <line x1="13.6" y1="71" x2="50" y2="50"/><line x1="13.6" y1="29" x2="50" y2="50"/>
+        </g>
+        <!-- inner hexagon -->
+        <polygon points="50,30 67.3,40 67.3,60 50,70 32.7,60 32.7,40" stroke="url(#g)" stroke-width="2" fill="rgba(47,107,255,0.18)"/>
+        <!-- center node -->
+        <polygon points="50,42 57,46 57,54 50,58 43,54 43,46" fill="#2f6bff"/>
+        <!-- vertex nodes -->
+        <g fill="#2f6bff">
+          <circle cx="50" cy="8" r="4"/><circle cx="86.4" cy="29" r="4"/><circle cx="86.4" cy="71" r="4"/>
+          <circle cx="50" cy="92" r="4"/><circle cx="13.6" cy="71" r="4"/><circle cx="13.6" cy="29" r="4"/>
+        </g>
+      </svg>
+      <div class="wm"><span class="sep"></span><span class="nx">NEXUS</span><span class="rdx">RDX</span></div>
+    </div>
+    <nav>
+      <button class="active" data-tab="home">Home</button>
+      <button data-tab="about">About</button>
+      <button data-tab="downloads">Downloads</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section class="tab active" id="home">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">AI for Real Estate Development</div>
+        <h1>Underwrite smarter.<br>Build <span class="accent">faster.</span></h1>
+        <p class="lead">Nexus RDX brings institutional-grade AI to real estate development — automating deal sourcing, underwriting, and analysis so your team can move on the right opportunities before anyone else.</p>
+        <button class="cta" data-tab="downloads">Get our Claude skill</button>
+        <button class="cta ghost" data-tab="about">Learn more</button>
+      </div>
+      <div class="hero-art">
+        <svg width="240" height="240" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b8bff"/><stop offset="1" stop-color="#2f6bff"/></linearGradient></defs>
+          <polygon points="50,8 86.4,29 86.4,71 50,92 13.6,71 13.6,29" stroke="url(#g2)" stroke-width="2.4" fill="rgba(47,107,255,0.05)"/>
+          <g stroke="url(#g2)" stroke-width="1.6" opacity="0.5"><line x1="50" y1="8" x2="50" y2="50"/><line x1="86.4" y1="29" x2="50" y2="50"/><line x1="86.4" y1="71" x2="50" y2="50"/><line x1="50" y1="92" x2="50" y2="50"/><line x1="13.6" y1="71" x2="50" y2="50"/><line x1="13.6" y1="29" x2="50" y2="50"/></g>
+          <polygon points="50,30 67.3,40 67.3,60 50,70 32.7,60 32.7,40" stroke="url(#g2)" stroke-width="1.6" fill="rgba(47,107,255,0.15)"/>
+          <polygon points="50,42 57,46 57,54 50,58 43,54 43,46" fill="#2f6bff"/>
+          <g fill="#2f6bff"><circle cx="50" cy="8" r="3.2"/><circle cx="86.4" cy="29" r="3.2"/><circle cx="86.4" cy="71" r="3.2"/><circle cx="50" cy="92" r="3.2"/><circle cx="13.6" cy="71" r="3.2"/><circle cx="13.6" cy="29" r="3.2"/></g>
+        </svg>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="k">10-yr</div><div class="l">Proformas modeled in seconds</div></div>
+      <div class="stat"><div class="k">Auto</div><div class="l">Deal sourcing from your inbox</div></div>
+      <div class="stat"><div class="k">Institutional</div><div class="l">Underwriting criteria, built in</div></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="tab" id="about">
+    <h2>About Nexus RDX</h2>
+    <p class="sub">We build AI tools for real estate developers and investors — turning the slow, manual parts of the deal cycle into automated, repeatable workflows. Based in San Francisco, our focus is simple: help teams find and underwrite better deals, faster.</p>
+    <div class="grid3">
+      <div class="feat">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2f6bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="8"/></svg></div>
+        <h3>Deal sourcing</h3>
+        <p>AI scans your inbox for broker listings and surfaces only genuinely new opportunities.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2f6bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 14 4-4 3 3 5-6"/></svg></div>
+        <h3>Underwriting</h3>
+        <p>T-12 normalization, 10-year proformas, and scenario analysis to institutional standards.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2f6bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></div>
+        <h3>Decision-ready output</h3>
+        <p>Excel workbooks and interactive maps that go straight into your investment committee.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOADS -->
+  <section class="tab" id="downloads">
+    <h2>Downloads</h2>
+    <p class="sub">Tools you can add to your own Claude. Download, then drag the file into Claude to install.</p>
+    <div class="dl-card">
+      <div class="dl-icon">
+        <svg width="46" height="46" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,8 86.4,29 86.4,71 50,92 13.6,71 13.6,29" stroke="#5b8bff" stroke-width="3" fill="rgba(91,139,255,0.12)"/>
+          <polygon points="50,42 57,46 57,54 50,58 43,54 43,46" fill="#5b8bff"/>
+          <g fill="#5b8bff"><circle cx="50" cy="8" r="4"/><circle cx="86.4" cy="29" r="4"/><circle cx="86.4" cy="71" r="4"/><circle cx="50" cy="92" r="4"/><circle cx="13.6" cy="71" r="4"/><circle cx="13.6" cy="29" r="4"/></g>
+        </svg>
+      </div>
+      <div class="dl-body">
+        <span class="dl-tag">Claude Skill</span>
+        <h3>Broker Deal Pipeline</h3>
+        <p>Scans your email for broker listings, underwrites each new deal with institutional acquisition criteria, and produces an Excel workbook plus an interactive map — automatically.</p>
+        <a class="dl-btn" id="dl" download="broker-deal-pipeline.skill">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Download skill
+        </a>
+      </div>
+    </div>
+    <div class="install">
+      <h4>How to install</h4>
+      <div class="step"><div class="n">1</div><div class="t">Click <strong>Download skill</strong> to save the <span>.skill</span> file.</div></div>
+      <div class="step"><div class="n">2</div><div class="t">Open it with Claude or drag it into Cowork.<span> Claude shows a "Save skill" install button.</span></div></div>
+      <div class="step"><div class="n">3</div><div class="t">Say <strong>"run the broker pipeline"</strong> to put it to work.</div></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot">
+    <span class="brand" style="gap:8px">
+      <svg width="20" height="20" viewBox="0 0 100 100" fill="none"><polygon points="50,8 86.4,29 86.4,71 50,92 13.6,71 13.6,29" stroke="#2f6bff" stroke-width="4" fill="none"/><polygon points="50,42 57,46 57,54 50,58 43,54 43,46" fill="#2f6bff"/></svg>
+      <strong style="color:var(--ink)">Nexus RDX</strong>
+    </span>
+    <span class="dot">·</span> San Francisco, CA <span class="dot">·</span> AI for Real Estate Development
+  </div>
+</footer>
+
+<script>
+  // tab switching
+  const tabs = document.querySelectorAll('section.tab');
+  const btns = document.querySelectorAll('nav button');
+  function go(name){
+    tabs.forEach(t=>t.classList.toggle('active', t.id===name));
+    btns.forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-tab]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.tab)));
+
+  // build the embedded download
+  const b64 = "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";
+  const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  const url = URL.createObjectURL(new Blob([bytes], {type:"application/zip"}));
+  document.getElementById("dl").href = url;
+</script>
+</body>
+</html>
