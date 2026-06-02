@@ -26,6 +26,18 @@
   nav button{background:none;border:none;color:#c6cdda;font-size:15px;font-weight:600;padding:9px 16px;border-radius:8px;cursor:pointer;transition:.15s}
   nav button:hover{color:#fff;background:rgba(255,255,255,.06)}
   nav button.active{color:#fff;background:var(--blue)}
+  nav .nav-li{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;color:#c6cdda;transition:.15s;margin-left:4px}
+  nav .nav-li:hover{color:#fff;background:rgba(255,255,255,.06)}
+
+  /* Team */
+  .team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:880px}
+  .member{display:flex;gap:20px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
+  .avatar{flex:none;width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#5b8bff,#2f6bff);color:#fff;font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center;letter-spacing:.02em}
+  .member h3{font-size:18px;margin-bottom:2px}
+  .member .role{color:var(--blue);font-weight:600;font-size:13.5px;margin-bottom:10px}
+  .member p{color:var(--muted);font-size:14px;margin-bottom:12px}
+  .member .li{display:inline-flex;align-items:center;gap:6px;color:var(--blue);font-weight:600;font-size:13.5px}
+  .member .li:hover{text-decoration:underline}
 
   main{max-width:1080px;margin:0 auto;padding:0 24px}
   section.tab{display:none;padding:72px 0}
@@ -82,6 +94,7 @@
     .hero-art{order:-1}
     h1{font-size:36px}
     .grid3{grid-template-columns:1fr}
+    .team-grid{grid-template-columns:1fr}
     nav{gap:0}
     nav button{padding:8px 10px;font-size:14px}
     .brand .wm .nx{font-size:20px}
@@ -120,7 +133,11 @@
     <nav>
       <button class="active" data-tab="home">Home</button>
       <button data-tab="about">About</button>
+      <button data-tab="team">Team</button>
       <button data-tab="downloads">Downloads</button>
+      <a class="nav-li" href="https://www.linkedin.com/company/nexusrdxai/" target="_blank" rel="noopener" aria-label="Nexus RDX on LinkedIn" title="Nexus RDX on LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
     </nav>
   </div>
 </header>
@@ -177,6 +194,38 @@
     </div>
   </section>
 
+  <!-- TEAM -->
+  <section class="tab" id="team">
+    <h2>Meet the team</h2>
+    <p class="sub">A small San Francisco team building AI tools for real estate development — pairing real estate and finance expertise with quantitative and technical depth.</p>
+    <div class="team-grid">
+      <div class="member">
+        <div class="avatar">TB</div>
+        <div>
+          <h3>Thomas (Tucker) Byrne</h3>
+          <div class="role">Real Estate &amp; Finance · Wisconsin School of Business</div>
+          <p>Born and raised in San Francisco, Tucker studies real estate and finance at the University of Wisconsin–Madison, with a focus on commercial real estate, banking, and technology. A water polo player and swimmer, he's completed the "Escape from Alcatraz" swim three times.</p>
+          <a class="li" href="https://www.linkedin.com/in/thomas-byrne-49a7252ab/" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+            View LinkedIn
+          </a>
+        </div>
+      </div>
+      <div class="member">
+        <div class="avatar">LC</div>
+        <div>
+          <h3>Logan Chapman</h3>
+          <div class="role">Mathematical Economics · Colorado College</div>
+          <p>A Math-Econ major and varsity lacrosse player at Colorado College, Logan focuses on investment banking and real estate finance. He has completed LSE's Real Estate Economics &amp; Finance program and builds underwriting models that power the platform.</p>
+          <a class="li" href="https://www.linkedin.com/in/logan-chapman4/" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+            View LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- DOWNLOADS -->
   <section class="tab" id="downloads">
     <h2>Downloads</h2>
@@ -215,6 +264,10 @@
       <strong style="color:var(--ink)">Nexus RDX</strong>
     </span>
     <span class="dot">·</span> San Francisco, CA <span class="dot">·</span> AI for Real Estate Development
+    <a href="https://www.linkedin.com/company/nexusrdxai/" target="_blank" rel="noopener" style="margin-left:auto;display:inline-flex;align-items:center;gap:7px;color:var(--blue);font-weight:600">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+      Follow on LinkedIn
+    </a>
   </div>
 </footer>
 
