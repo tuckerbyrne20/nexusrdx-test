@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Risk Dashboard</title>
+<!--
+  Risk Scoring Framework — Portfolio Dashboard template.
+  At generation time, replace the {"last_run": "2026-06-02", "scored_properties": [{"name": "Maple Court Apartments", "location": "Austin, TX", "property_type": "Multifamily", "strategy": "Value-Add", "composite_score": 34, "risk_rating": "MODERATE", "data_confidence": 88, "risk_adjusted_irr": 14.2, "top_risk_driver": "Supply pipeline", "offer_deadline": "2026-06-20", "report_file": "", "category_scores": {"market": 42, "credit": 28, "physical": 31, "environmental": 18, "execution": 40}}, {"name": "Riverside Logistics Center", "location": "Phoenix, AZ", "property_type": "Industrial", "strategy": "Core-Plus", "composite_score": 22, "risk_rating": "LOW", "data_confidence": 91, "risk_adjusted_irr": 11.8, "top_risk_driver": "Tenant rollover", "offer_deadline": "2026-07-02", "report_file": "", "category_scores": {"market": 20, "credit": 24, "physical": 18, "environmental": 15, "execution": 27}}, {"name": "Gateway Office Plaza", "location": "Chicago, IL", "property_type": "Office", "strategy": "Opportunistic", "composite_score": 71, "risk_rating": "ELEVATED", "data_confidence": 67, "risk_adjusted_irr": 9.4, "top_risk_driver": "Lease-up / vacancy", "offer_deadline": "2026-06-12", "report_file": "", "category_scores": {"market": 78, "credit": 61, "physical": 55, "environmental": 40, "execution": 74}}, {"name": "Sunset Ridge Townhomes", "location": "Denver, CO", "property_type": "Multifamily", "strategy": "Value-Add", "composite_score": 47, "risk_rating": "MODERATE", "data_confidence": 82, "risk_adjusted_irr": 13.0, "top_risk_driver": "Insurance cost", "offer_deadline": "2026-06-28", "report_file": "", "category_scores": {"market": 44, "credit": 38, "physical": 52, "environmental": 49, "execution": 45}}, {"name": "Harbor Point Retail", "location": "Tampa, FL", "property_type": "Retail", "strategy": "Core-Plus", "composite_score": 58, "risk_rating": "ELEVATED", "data_confidence": 74, "risk_adjusted_irr": 10.6, "top_risk_driver": "Flood / climate", "offer_deadline": "2026-07-15", "report_file": "", "category_scores": {"market": 50, "credit": 47, "physical": 54, "environmental": 80, "execution": 52}}, {"name": "Cedar Mill Self-Storage", "location": "Nashville, TN", "property_type": "Self-Storage", "strategy": "Core", "composite_score": 18, "risk_rating": "LOW", "data_confidence": 85, "risk_adjusted_irr": 12.3, "top_risk_driver": "New competition", "offer_deadline": "", "report_file": "", "category_scores": {"market": 22, "credit": 15, "physical": 14, "environmental": 12, "execution": 21}}]} token below with the contents
+  of risk_scoring_log.json (the whole object). No server required.
+-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root{--ink:#1a1f2b;--muted:#5b6573;--line:#e3e7ee;--bg:#f6f7f9;--card:#fff;
+    --low:#2f9e63;--mod:#d9a521;--elev:#e0772b;--high:#cf3b3b;--accent:#1f4e79}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:14px;line-height:1.5}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 22px 60px}
+  .eyebrow{letter-spacing:.12em;text-transform:uppercase;font-size:11px;color:var(--muted);font-weight:600}
+  h1{font-size:24px;margin:4px 0 2px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .kpi .k{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+  .kpi .v{font-size:24px;font-weight:700;margin-top:2px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .card h3{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--accent)}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th{background:#eef1f6;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);cursor:pointer;user-select:none}
+  th.num,td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#f3f6fb}
+  .pill{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff;display:inline-block}
+  .b-low{background:var(--low)}.b-mod{background:var(--mod)}.b-elev{background:var(--elev)}.b-high{background:var(--high)}
+  .conf{font-weight:700}
+  .deadline{font-size:11px;font-weight:700;padding:1px 7px;border-radius:5px;background:#eee;color:#444}
+  .due-soon{background:#ffe3d3;color:#a23c00}.past-due{background:#ffd6d6;color:#9c0000}
+  a{color:var(--accent)}
+  .empty{padding:40px;text-align:center;color:var(--muted)}
+  footer{margin-top:26px;padding-top:12px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+  @media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+  tbody tr{cursor:pointer}
+  .viewbtn{font-size:11px;font-weight:700;color:#fff;background:var(--accent);border:none;border-radius:5px;padding:3px 9px;cursor:pointer}
+  .modal-bg{position:fixed;inset:0;background:rgba(20,28,40,.55);display:none;align-items:flex-start;justify-content:center;z-index:50;padding:24px;overflow:auto}
+  .modal-bg.open{display:flex}
+  .modal{background:var(--card);border-radius:12px;width:100%;max-width:920px;box-shadow:0 12px 48px rgba(0,0,0,.3);overflow:hidden;min-height:200px}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);background:#eef1f6}
+  .modal-head b{font-size:13px;color:var(--accent)}
+  .modal-close{border:none;background:#1f4e79;color:#fff;font-weight:700;border-radius:6px;padding:5px 12px;cursor:pointer}
+  .modal iframe{width:100%;height:78vh;border:0;display:block}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Risk Scoring Framework</div>
+  <h1>Portfolio Risk Dashboard</h1>
+  <div class="sub" id="sub">All deals scored to date · ranked by composite risk</div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid2">
+    <div class="card"><h3>Composite vs. Data Confidence</h3><canvas id="scatter" height="220"></canvas>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px">Bottom-right = high risk you're confident in. Top-left = low-confidence scores needing diligence.</div>
+    </div>
+    <div class="card"><h3>Average Category Risk (portfolio)</h3><canvas id="bars" height="220"></canvas></div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table id="tbl">
+      <thead><tr>
+        <th data-k="name">Property</th>
+        <th data-k="location">Location</th>
+        <th data-k="property_type">Type</th>
+        <th data-k="strategy">Strategy</th>
+        <th class="num" data-k="composite_score">Composite ▲</th>
+        <th data-k="risk_rating">Rating</th>
+        <th class="num" data-k="data_confidence">Conf %</th>
+        <th class="num" data-k="risk_adjusted_irr">Risk-Adj IRR</th>
+        <th data-k="top_risk_driver">Top Driver</th>
+        <th data-k="offer_deadline">Deadline</th>
+        <th data-k="report_file">Report</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty" id="empty" style="display:none">No deals scored yet. Run the email pipeline to populate this dashboard.</div>
+  </div>
+
+  <footer id="foot">Generated by the Risk Scoring Framework skill. Click any row to open its full risk assessment — everything is contained in this one file.</footer>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-head"><b id="modalTitle">Risk Assessment</b><button class="modal-close" id="modalClose">Close ✕</button></div>
+    <iframe id="modalFrame" sandbox="allow-same-origin"></iframe>
+  </div>
+</div>
+
+<script>
+// ===== Data: replaced at generation time =====
+// {"last_run": "2026-06-02", "scored_properties": [{"name": "Maple Court Apartments", "location": "Austin, TX", "property_type": "Multifamily", "strategy": "Value-Add", "composite_score": 34, "risk_rating": "MODERATE", "data_confidence": 88, "risk_adjusted_irr": 14.2, "top_risk_driver": "Supply pipeline", "offer_deadline": "2026-06-20", "report_file": "", "category_scores": {"market": 42, "credit": 28, "physical": 31, "environmental": 18, "execution": 40}}, {"name": "Riverside Logistics Center", "location": "Phoenix, AZ", "property_type": "Industrial", "strategy": "Core-Plus", "composite_score": 22, "risk_rating": "LOW", "data_confidence": 91, "risk_adjusted_irr": 11.8, "top_risk_driver": "Tenant rollover", "offer_deadline": "2026-07-02", "report_file": "", "category_scores": {"market": 20, "credit": 24, "physical": 18, "environmental": 15, "execution": 27}}, {"name": "Gateway Office Plaza", "location": "Chicago, IL", "property_type": "Office", "strategy": "Opportunistic", "composite_score": 71, "risk_rating": "ELEVATED", "data_confidence": 67, "risk_adjusted_irr": 9.4, "top_risk_driver": "Lease-up / vacancy", "offer_deadline": "2026-06-12", "report_file": "", "category_scores": {"market": 78, "credit": 61, "physical": 55, "environmental": 40, "execution": 74}}, {"name": "Sunset Ridge Townhomes", "location": "Denver, CO", "property_type": "Multifamily", "strategy": "Value-Add", "composite_score": 47, "risk_rating": "MODERATE", "data_confidence": 82, "risk_adjusted_irr": 13.0, "top_risk_driver": "Insurance cost", "offer_deadline": "2026-06-28", "report_file": "", "category_scores": {"market": 44, "credit": 38, "physical": 52, "environmental": 49, "execution": 45}}, {"name": "Harbor Point Retail", "location": "Tampa, FL", "property_type": "Retail", "strategy": "Core-Plus", "composite_score": 58, "risk_rating": "ELEVATED", "data_confidence": 74, "risk_adjusted_irr": 10.6, "top_risk_driver": "Flood / climate", "offer_deadline": "2026-07-15", "report_file": "", "category_scores": {"market": 50, "credit": 47, "physical": 54, "environmental": 80, "execution": 52}}, {"name": "Cedar Mill Self-Storage", "location": "Nashville, TN", "property_type": "Self-Storage", "strategy": "Core", "composite_score": 18, "risk_rating": "LOW", "data_confidence": 85, "risk_adjusted_irr": 12.3, "top_risk_driver": "New competition", "offer_deadline": "", "report_file": "", "category_scores": {"market": 22, "credit": 15, "physical": 14, "environmental": 12, "execution": 21}}]}  -> contents of risk_scoring_log.json
+// {} -> { "<report_file>": "<full self-contained report HTML>", ... }
+// Inlining the reports makes this dashboard a single self-contained file:
+// one link, one tab, every detailed assessment a click away.
+const LOG = {"last_run": "2026-06-02", "scored_properties": [{"name": "Maple Court Apartments", "location": "Austin, TX", "property_type": "Multifamily", "strategy": "Value-Add", "composite_score": 34, "risk_rating": "MODERATE", "data_confidence": 88, "risk_adjusted_irr": 14.2, "top_risk_driver": "Supply pipeline", "offer_deadline": "2026-06-20", "report_file": "", "category_scores": {"market": 42, "credit": 28, "physical": 31, "environmental": 18, "execution": 40}}, {"name": "Riverside Logistics Center", "location": "Phoenix, AZ", "property_type": "Industrial", "strategy": "Core-Plus", "composite_score": 22, "risk_rating": "LOW", "data_confidence": 91, "risk_adjusted_irr": 11.8, "top_risk_driver": "Tenant rollover", "offer_deadline": "2026-07-02", "report_file": "", "category_scores": {"market": 20, "credit": 24, "physical": 18, "environmental": 15, "execution": 27}}, {"name": "Gateway Office Plaza", "location": "Chicago, IL", "property_type": "Office", "strategy": "Opportunistic", "composite_score": 71, "risk_rating": "ELEVATED", "data_confidence": 67, "risk_adjusted_irr": 9.4, "top_risk_driver": "Lease-up / vacancy", "offer_deadline": "2026-06-12", "report_file": "", "category_scores": {"market": 78, "credit": 61, "physical": 55, "environmental": 40, "execution": 74}}, {"name": "Sunset Ridge Townhomes", "location": "Denver, CO", "property_type": "Multifamily", "strategy": "Value-Add", "composite_score": 47, "risk_rating": "MODERATE", "data_confidence": 82, "risk_adjusted_irr": 13.0, "top_risk_driver": "Insurance cost", "offer_deadline": "2026-06-28", "report_file": "", "category_scores": {"market": 44, "credit": 38, "physical": 52, "environmental": 49, "execution": 45}}, {"name": "Harbor Point Retail", "location": "Tampa, FL", "property_type": "Retail", "strategy": "Core-Plus", "composite_score": 58, "risk_rating": "ELEVATED", "data_confidence": 74, "risk_adjusted_irr": 10.6, "top_risk_driver": "Flood / climate", "offer_deadline": "2026-07-15", "report_file": "", "category_scores": {"market": 50, "credit": 47, "physical": 54, "environmental": 80, "execution": 52}}, {"name": "Cedar Mill Self-Storage", "location": "Nashville, TN", "property_type": "Self-Storage", "strategy": "Core", "composite_score": 18, "risk_rating": "LOW", "data_confidence": 85, "risk_adjusted_irr": 12.3, "top_risk_driver": "New competition", "offer_deadline": "", "report_file": "", "category_scores": {"market": 22, "credit": 15, "physical": 14, "environmental": 12, "execution": 21}}]};
+const REPORTS = {};
+
+const deals = (LOG && LOG.scored_properties) ? LOG.scored_properties.slice() : [];
+const band = s => s>=76?'b-high':s>=51?'b-elev':s>=26?'b-mod':'b-low';
+const ratingOf = s => s>=76?'HIGH':s>=51?'ELEVATED':s>=26?'MODERATE':'LOW';
+const fmtPct = v => (v==null||v==='')?'—':(typeof v==='number'?v.toFixed(1)+'%':v);
+
+document.getElementById('sub').textContent =
+  `${deals.length} deal${deals.length===1?'':'s'} scored to date${LOG&&LOG.last_run?' · last run '+LOG.last_run:''} · ranked by composite risk`;
+
+// KPIs
+const avg = (arr)=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
+const comps = deals.map(d=>d.composite_score).filter(n=>typeof n==='number');
+const confs = deals.map(d=>d.data_confidence).filter(n=>typeof n==='number');
+const elevated = deals.filter(d=>d.composite_score>=51).length;
+const kpis=[
+  ['Deals scored', deals.length],
+  ['Avg composite', comps.length?avg(comps).toFixed(0):'—'],
+  ['Avg confidence', confs.length?avg(confs).toFixed(0)+'%':'—'],
+  ['Elevated / High', elevated]
+];
+document.getElementById('kpis').innerHTML = kpis.map(([k,v])=>
+  `<div class="kpi"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+
+// Quartile benchmark for tooltip on composite
+const sortedComp = comps.slice().sort((a,b)=>a-b);
+function quartile(v){ if(!sortedComp.length) return ''; const r=sortedComp.filter(x=>x<=v).length/sortedComp.length;
+  return r>=0.75?'riskiest quartile':r>=0.5?'upper-mid':r>=0.25?'lower-mid':'safest quartile'; }
+
+// Table render + sort
+let sortKey='composite_score', sortDir=-1;
+function deadlineCell(d){
+  if(!d.offer_deadline) return '<span class="deadline">—</span>';
+  const today=new Date(LOG && LOG.last_run ? LOG.last_run : Date.now());
+  const dl=new Date(d.offer_deadline); const days=Math.round((dl-today)/86400000);
+  let cls='deadline',lab=d.offer_deadline;
+  if(days<0){cls+=' past-due';lab='PAST DUE';} else if(days<=7){cls+=' due-soon';lab=days+'d left';}
+  return `<span class="${cls}">${lab}</span>`;
+}
+function render(){
+  const rows=document.getElementById('rows');
+  if(!deals.length){document.getElementById('empty').style.display='block';return;}
+  deals.sort((a,b)=>{const x=a[sortKey],y=b[sortKey];
+    if(typeof x==='number'&&typeof y==='number')return (x-y)*sortDir;
+    return String(x||'').localeCompare(String(y||''))*sortDir;});
+  rows.innerHTML=deals.map(d=>{
+    const s=d.composite_score;
+    return `<tr>
+      <td>${d.name||'—'}</td>
+      <td>${d.location||'—'}</td>
+      <td>${d.property_type||'—'}</td>
+      <td>${d.strategy||'—'}</td>
+      <td class="num" title="${quartile(s)}"><span class="pill ${band(s)}">${s??'—'}</span></td>
+      <td>${d.risk_rating||ratingOf(s)}</td>
+      <td class="num conf" style="color:${(d.data_confidence??0)>=80?'var(--low)':(d.data_confidence??0)>=60?'var(--mod)':'var(--high)'}">${d.data_confidence!=null?d.data_confidence+'%':'—'}</td>
+      <td class="num">${fmtPct(d.risk_adjusted_irr)}</td>
+      <td>${d.top_risk_driver||'—'}</td>
+      <td>${deadlineCell(d)}</td>
+      <td>${(d.report_file && REPORTS[d.report_file])?`<button class="viewbtn" data-file="${d.report_file}" data-name="${(d.name||'').replace(/"/g,'&quot;')}">View ▸</button>`:(d.report_file?`<a href="${d.report_file}">open</a>`:'—')}</td>
+    </tr>`;}).join('');
+  // row / button click -> open the embedded report
+  rows.querySelectorAll('tr').forEach((tr,i)=>{
+    const d=deals[i]; if(!d || !REPORTS[d.report_file]) return;
+    tr.addEventListener('click',e=>{ if(e.target.tagName==='A') return; openReport(d.report_file,d.name); });
+  });
+}
+function openReport(file,name){
+  const html=REPORTS[file]; if(!html) return;
+  document.getElementById('modalTitle').textContent=name||'Risk Assessment';
+  document.getElementById('modalFrame').srcdoc=html;
+  document.getElementById('modalBg').classList.add('open');
+}
+function closeReport(){ document.getElementById('modalBg').classList.remove('open');
+  document.getElementById('modalFrame').srcdoc=''; }
+document.getElementById('modalClose').addEventListener('click',closeReport);
+document.getElementById('modalBg').addEventListener('click',e=>{ if(e.target.id==='modalBg') closeReport(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeReport(); });
+document.querySelectorAll('#tbl th').forEach(th=>th.addEventListener('click',()=>{
+  const k=th.dataset.k; if(k===sortKey){sortDir*=-1;}else{sortKey=k;sortDir=(k==='name'||k==='location')?1:-1;}
+  document.querySelectorAll('#tbl th').forEach(t=>t.textContent=t.textContent.replace(/[▲▼]/g,'').trim());
+  th.textContent=th.textContent+' '+(sortDir<0?'▼':'▲'); render();}));
+render();
+
+// Charts
+if(deals.length && window.Chart){
+  new Chart(document.getElementById('scatter'),{type:'scatter',
+    data:{datasets:[{label:'Deals',data:deals.map(d=>({x:d.data_confidence,y:d.composite_score,name:d.name})),
+      pointRadius:7,pointHoverRadius:9,
+      backgroundColor:deals.map(d=>{const c=getComputedStyle(document.documentElement).getPropertyValue('--mod');
+        const s=d.composite_score;return s>=76?'#cf3b3b':s>=51?'#e0772b':s>=26?'#d9a521':'#2f9e63';})}]},
+    options:{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw.name}: risk ${c.raw.y}, conf ${c.raw.x}%`}}},
+      scales:{x:{title:{display:true,text:'Data confidence %'},min:0,max:100},
+              y:{title:{display:true,text:'Composite risk'},min:0,max:100}}}});
+
+  const cats=['market','credit','physical','environmental','execution'];
+  const avgCat=cats.map(c=>avg(deals.map(d=>(d.category_scores&&d.category_scores[c])||0).filter(n=>n)));
+  new Chart(document.getElementById('bars'),{type:'bar',
+    data:{labels:['Market','Credit','Physical','Environ.','Execution'],
+      datasets:[{label:'Avg score',data:avgCat,
+        backgroundColor:avgCat.map(s=>s>=76?'#cf3b3b':s>=51?'#e0772b':s>=26?'#d9a521':'#2f9e63')}]},
+    options:{plugins:{legend:{display:false}},scales:{y:{min:0,max:100,title:{display:true,text:'Risk'}}}}});
+}
+</script>
+</body>
+</html>
